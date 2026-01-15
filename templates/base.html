@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La biblioteca del Martin Pescatore Mosca Club</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-book me-2"></i>La biblioteca del MPMC
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="bi bi-house-door me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="Libri" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-plus-circle me-1"></i>Libri
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/book-list">Elenco dei libri</a></li>
+                            <li><a class="dropdown-item" href="/book-add">Aggiungi libro</a></li>
+                            <li><a class="dropdown-item" href="/book-mod">Modifica libro</a></li>
+                            <li><a class="dropdown-item" href="/book-del">Cancella libro</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="Utenti" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-plus-circle me-1"></i>Utenti
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/user-list">Elenco degli Utenti</a></li>
+                            <li><a class="dropdown-item" href="/user-add">Aggiungi Utente</a></li>
+                            <li><a class="dropdown-item" href="/user-mod">Modifica Utente</a></li>
+                            <li><a class="dropdown-item" href="/user-del">Cancella Utente</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="Prestiti" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-plus-circle me-1"></i>Prestiti
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/loan-list">Elenco dei Prestiti</a></li>
+                            <li><a class="dropdown-item" href="/loan-add">Aggiungi Prestiti</a></li>
+                            <li><a class="dropdown-item" href="/loan-mod">Modifica Prestiti</a></li>
+                            <li><a class="dropdown-item" href="/loan-del">Cancella Prestiti</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="About" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-info-circle me-1"></i>About
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/about">About Library System</a></li>
+                            <li><a class="dropdown-item" href="/contact">Contact Us</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="Help" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-question-circle me-1"></i>Help
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/help/user-guide">User Guide</a></li>
+                            <li><a class="dropdown-item" href="/help/faq">FAQ</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">&copy; 2025 La biblioteca MPMC</span>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

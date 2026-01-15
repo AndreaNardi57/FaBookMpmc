@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if message %}
+    <div class="alert alert-success">{{ message }}</div>
+    {% endif %}
+
+    <h1>I miei libri letti</h1>
+
+    {% if books %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titolo</th>
+                <th>Autore</th>
+                <th>ISBN</th>
+                <th>Descrizione</th>
+                <th>Stato</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>{{ book.id }}</td>
+                <td>{{ book.title}}</td>
+                <td>{{ book.author}}</td>
+                <td>{{ book.isbn }}</td>
+                <td>{{ book.description }}</td>
+                <td>{{ book.status }}</td>
+                <td>
+                <!--    
+                    {% if book.dataChiusura==NULL or book.dataChiusura=='9999-01-01' %}
+                        <a href="/return-book/{{ book.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to return this book?')">Restituire</a>
+                    {% endif %}
+                -->
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No books in the library yet.</p>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h1 class="mb-4">Contact Us</h1>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Get in Touch</h5>
+                <form>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message</label>
+                        <textarea class="form-control" id="message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" disabled>
+                        Send Message (Disabled in Demo)
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title">Support Information</h5>
+                <p>
+                    <strong>Email:</strong> support@librarymanagement.com<br>
+                    <strong>Phone:</strong> +1 (555) 123-4567<br>
+                    <strong>Address:</strong> 123 Library Lane, Book City, BC 12345
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

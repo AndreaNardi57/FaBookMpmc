@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <h1 class="mb-4">User Guide</h1>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Getting Started</h5>
+                <ol class="list-group list-group-numbered">
+                    <li class="list-group-item">Navigate to the Home page to see existing books</li>
+                    <li class="list-group-item">Click "Add Book" in the navigation menu to add a new book</li>
+                    <li class="list-group-item">Fill out all required fields in the book addition form</li>
+                    <li class="list-group-item">Click "Add Book" to save the new book to the library</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title">Book Management</h5>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <strong>Adding Books:</strong> 
+                        Provide complete information including title, author, ISBN, publication year, and genre
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Deleting Books:</strong> 
+                        Use the delete button on the home page to remove a book from the library
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title">Troubleshooting</h5>
+                <div class="accordion" id="troubleshootingAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                Cannot Add Book
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                Ensure all required fields are filled and the ISBN is unique.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

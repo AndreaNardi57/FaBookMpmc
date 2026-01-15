@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if message %}
+    <div class="alert alert-success">{{ message }}</div>
+    {% endif %}
+
+        <style>
+        /* Reset base */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+            background: #eef2f7;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        .search-form input[type="text"],
+        .search-form select {
+            padding: 8px;
+            border: 1px solid #ccd0d5;
+            border-radius: 4px;
+            flex: 1;
+            min-width: 150px;
+        }
+        .search-form label {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            gap: 5px;
+        }
+        .search-form button {
+            background-color: #04AA6D; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+        }
+        <!--
+        .search-form button:hover {
+            background-color: #0056b3;
+        } 
+        -->
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table thead th {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            text-align: left;
+        }
+        table tbody tr:nth-child(even) {
+            background-color: #f6f8fa;
+        }
+        table tbody td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        table tbody tr:hover {
+            background-color: #e9ecef;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .pagination a, .pagination span {
+            padding: 6px 12px;
+            text-decoration: none;
+            border: 1px solid #ccd0d5;
+            border-radius: 4px;
+            min-width: 40px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .pagination a {
+            background-color: #fff;
+            color: #007bff;
+            transition: background-color 0.3s ease;
+        }
+        .pagination a:hover {
+            background-color: #e2e6ea;
+        }
+        .pagination span {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+            border-color: #007bff;
+        }
+    </style>
+    <!--
+    <h2>La biblioteca del MPMC</h2>
+    -->
+    <form method="get" action="/search" class="search-form">
+        <input type="text" name="query" size="30" placeholder="Cerca per titolo o autore">
+        <label><input type="radio" name="search_field" value="title" {% if search_field == 'title' %}checked{% endif %}> Titolo</label>
+        <label><input type="radio" name="search_field" value="author" {% if search_field == 'author' %}checked{% endif %}> Autore</label>
+        <button type="submit" size="10">Cerca</button>
+    </form>
+
+    {% if books %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titolo</th>
+                <th>Autore</th>
+		        <th>ISBN</th>
+                <th>Descrizione</th>
+                <th>Stato</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>{{ book.id }}</td>
+                <td>{{ book.title}}</td>
+                <td>{{ book.author}}</td>
+                <td>{{ book.isbn }}</td>
+                <td>{{ book.description }}</td>
+                <td>{{ book.status }}</td>
+                <td>
+                <!--
+                    {% if book.dataChiusura==NULL or book.dataChiusura=='9999-01-01' %}
+                        <a href="/return-book/{{ book.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to return this book?')">Restituire</a>
+                    {% endif %}
+                -->
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No books in the library yet.</p>
+    {% endif %}
+
+    <!-- Controlli di navigazione -->
+    <div class="pagination">
+        {% if page > 1 %}
+            <a style="margin-right: 10px;" href="?page={{ page - 1 }}&per_page={{ per_page }}">&laquo;  Precedente</a>
+        {% endif %}
+        
+        {% for p in range(1, total_pages + 1) %}
+            {% if p == page %}
+                <span>{{ p }}</span>
+            {% else %}
+                <a href="?page={{ p }}&per_page={{ per_page }}">{{ p }}</a>
+            {% endif %}
+        {% endfor %}
+        
+        {% if page < total_pages %}
+            <a style="margin-left: 10px;" href="?page={{ page + 1 }}&per_page={{ per_page }}">Successiva &raquo;</a>
+        {% endif %}
+    </div>
+
+{% endblock %}

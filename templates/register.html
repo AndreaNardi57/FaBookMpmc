@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head><title>Registrazione</title></head>
+<style>
+      body {
+        font-family: sans-serif;
+        margin: 2em;
+      }
+      form {
+        width: 300px;
+        margin: 0 auto;
+      }
+      input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+      }
+      button {
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+      }
+      .error {
+        color: red;
+      }
+    </style>
+<body>
+    <h2>Registrati</h2>
+    {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
+    <form action="/register/html" method="post">
+        <input type="text" name="first_name" placeholder="First name" required>
+        <input type="text" name="last_name" placeholder="Last name" required>
+        <input type="text" name="username" placeholder="Username" required>
+        <input name="password" type="password" placeholder="Password" required>
+        <input type="email" name="email" placeholder="Email address" required>
+        <input name="phone" type="tel" placeholder="Phone number" required">
+        <input name="status" type="text" placeholder="Status" list="browsers">
+          <datalist id="browsers">
+            <option value="Admin">
+            <option value="Staff">
+            <option value="Beginner">
+          </datalist>
+        <button type="submit">Registrati</button>
+    </form>
+</body>
+</html>

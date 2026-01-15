@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Add New Book</h1>
+
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="/add-book">
+        <div class="mb-3">
+            <label for="operazione" class="form-label">Operazione</label>
+            <input type="text" class="form-control" id="operazione" name="operazione" required>
+        </div>
+        <div class="mb-3">
+            <label for="dataRitiro" class="form-label">Data Prestito</label>
+            <input type="date" class="form-control" id="dataRitiro" name="dataRitiro">
+        </div>
+        <div class="mb-3">
+            <label for="dataChiusura" class="form-label">Data Restituzione</label>
+            <input type="date" class="form-control" id="dataChiusura" name="dataChiusura">
+        </div>
+        <div class="mb-3">
+            <label for="autore" class="form-label">Autore</label>
+            <input type="text" class="form-control" id="autore" name="autore" required>
+        </div>
+        <div class="mb-3">
+            <label for="titolo" class="form-label">Titolo</label>
+            <input type="text" class="form-control" id="titolo" name="titolo" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Book</button>
+    </form>
+{% endblock %}

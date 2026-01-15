@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="mb-4">About Library Management System</h1>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Our Mission</h5>
+                <p class="card-text">
+                    The Library Management System is designed to streamline book management 
+                    for libraries, schools, and book collections. Our goal is to provide a 
+                    simple, efficient, and user-friendly platform for tracking and managing books.
+                </p>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title">Key Features</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Easy book addition and management</li>
+                    <li class="list-group-item">Comprehensive book tracking</li>
+                    <li class="list-group-item">Simple and intuitive interface</li>
+                    <li class="list-group-item">SQLite database for lightweight storage</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title">Technologies Used</h5>
+                <p>
+                    <span class="badge bg-primary me-2">FastAPI</span>
+                    <span class="badge bg-success me-2">SQLAlchemy</span>
+                    <span class="badge bg-info me-2">SQLite</span>
+                    <span class="badge bg-warning me-2">Jinja2</span>
+                    <span class="badge bg-secondary me-2">Bootstrap</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
