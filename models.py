@@ -15,7 +15,7 @@ Date_Value = 'CURRENT_DATE'
 
 
 class Book(Base):
-	__tablename__ = "mpmcbiblio.books"
+	__tablename__ = "books"
 	id = Column(Integer, primary_key=True, index = True)
 	title = Column(Text, nullable = False)
 	author = Column(Text, nullable = False)
