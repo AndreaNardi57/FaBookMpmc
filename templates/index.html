@@ -4,7 +4,7 @@
     {% if message %}
     <div class="alert alert-success">{{ message }}</div>
     {% endif %}
-
+    
         <style>
         /* Reset base */
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,11 +46,10 @@
             display: inline-block;
             font-size: 12px;
         }
-        <!--
         .search-form button:hover {
             background-color: #0056b3;
         } 
-        -->
+        <!--
         table {
             width: 100%;
             border-collapse: collapse;
@@ -58,7 +57,7 @@
         }
         table thead th {
             background-color: #007bff;
-            color: #fff;
+            color: #000000;
             padding: 10px;
             text-align: left;
         }
@@ -72,6 +71,7 @@
         table tbody tr:hover {
             background-color: #e9ecef;
         }
+        -->
         .pagination {
             display: flex;
             justify-content: center;
@@ -102,6 +102,7 @@
             border-color: #007bff;
         }
     </style>
+    
     <!--
     <h2>La biblioteca del MPMC</h2>
     -->
@@ -111,7 +112,7 @@
         <label><input type="radio" name="search_field" value="author" {% if search_field == 'author' %}checked{% endif %}> Autore</label>
         <button type="submit" size="10">Cerca</button>
     </form>
-
+    
     {% if books %}
     <table class="table table-striped">
         <thead>

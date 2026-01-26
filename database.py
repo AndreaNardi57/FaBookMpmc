@@ -25,6 +25,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Create Base class for models
 Base = declarative_base()
+
+## Base.metadata.schema = 'pescatorello'
 Base.metadata.schema = 'mpmcbiblio'
 
 # Dependency to get database session

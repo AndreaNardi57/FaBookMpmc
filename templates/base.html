@@ -76,6 +76,15 @@
                     </li>
                 </ul>
             </div>
+            <div class="user_name">
+                {% if current_user %}
+                    <span>Welcome, {{ current_user.username }}!</span>
+                    <a href="/logout" style="color:black;">Logout </a>
+                {% else %}
+                    <a href="/login" style="color:black;">Login</a> |
+                    <a href="/register" style="color:black;">Register</a>
+                {% endif %}
+            </div>
         </div>
     </nav>
 
