@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if message %}
+    <div class="alert alert-success">{{ message }}</div>
+    {% endif %}
+
+    <!--<h1>Prestiti</h1>-->
+
+    {% if loans %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titolo</th>
+                <th>Autore</th>
+                <th>Utente</th>
+                <th>Stato</th>
+                <th>Data prestito</th>
+                <th>Scadenza prestito</th>
+                <th>Data ritorno</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loan in loans %}
+            <tr>
+                <td>{{ loan.id }}</td>
+                <td>{{ loan.title}}</td>
+                <td>{{ loan.author}}</td>
+                <td>{{ loan.username }}</td>
+                <td>{{ loan.status }}</td>
+                <td>{{ loan.borrowed }}</td>
+                <td>{{ loan.due_back }}</td>
+                <td>{{ loan.return_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No loans in the library yet.</p>
+    {% endif %}
+
+{% endblock %}
