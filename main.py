@@ -194,6 +194,19 @@ def search_books(request: Request, query: str = "", search_field: str = "",  db:
         "current_user": current_user
         })
 
+@app.get("/loan-list")
+def loan_books(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(get_current_user)):
+    if not current_user:
+        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+
+    loans = crud.get_loans(db)
+    return templates.TemplateResponse("prestiti.html", {
+        "request": request, 
+        "loans": loans,
+        "current_user": current_user
+        })
+
+
 # --- LOGIN ---
 @app.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request):

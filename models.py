@@ -1,10 +1,3 @@
-# Source - https://stackoverflow.com/a
-# Posted by vaultah, modified by community. See post 'Timeline' for change history
-# Retrieved 2026-01-12, License - CC BY-SA 3.0
-
-from pathlib import Path
-print('Running' if __name__ == '__main__' else 'Importing', Path(__file__).resolve())
-
 from sqlalchemy import Column, Integer, String, Date, Boolean, Float, TIMESTAMP, Text
 from database import Base
 from sqlalchemy.sql.expression import text
@@ -44,3 +37,29 @@ class User(Base):
     created_at = Column(Date, server_default=text(Date_Value))
 	    
     # loans = relationship("Loan", back_populates="users")
+
+class Copies(Base):
+	__tablename__ = "copies"
+	id = Column(Integer, primary_key=True, index=True)
+	book_id = Column(Integer, nullable = False)
+	lay = Column(String)
+	status = Column(Text)
+	conditions = Column(String)
+	notes = Column(Text)
+
+	# books = relationship(Books, back_populates("copies"))
+
+class Loan(Base):
+    __tablename__ = "on_loan"
+
+    id = Column(Integer, primary_key=True, index=True)
+    copies_id = Column(Integer, nullable = False)
+    user_id = Column(Integer, nullable = False)
+    borrowed = Column(Date, server_default=text(Date_Value))
+    due_back = Column(Date, nullable = False)
+    return_date = Column(Date)
+    notes = Column(Text)
+    status = Column(Text)
+
+    # copies = relationship("Copies", back_populates="on_loans")
+    # users = relationship("User", back_populates="on_loans")
