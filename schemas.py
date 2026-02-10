@@ -22,25 +22,32 @@ class Book(BookBase):
     class Config:
         from_attributes = True
 
-    class UserBase(BaseModel):
-        first_name: str
-        last_name: str
-        username: str
-        password: str
-        email: str
-        phone: str
-        is_active: bool
-        status: str
-        created_at: date
+class UserBase(BaseModel):
+    username: str
+    email: str
+    first_name: str
+    last_name: str
+    phone: str | None = None
+    hashed_password: str
+    role: str
+    is_active: bool
+    created_at: date
+
+    @field_validator("phone", mode="before")
+    def empty_string_to_none(cls, v):
+        if v == "" or v is None:
+            return None
+        return v
+
             
-    class UserCreate(UserBase):
-        pass
+class UserCreate(UserBase):
+    pass
 
-    class User(UserBase):
-        id: int
+class User(UserBase):
+    id: int
 
-        class Config:
-            from_attributes = True
+    class Config:
+        from_attributes = True
 
 class CopiesBase(BaseModel):
     book_id: int
@@ -63,14 +70,29 @@ class LoanBase(BaseModel):
     user_id: int
     borrowed: date
     due_back: date
-    return_date: date
-    notes: str
+    return_date: date | None = None
+    notes: str | None = None
     status: str
         
 class LoanCreate(LoanBase):
     pass
 
 class Loan(LoanBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class AuditBase(BaseModel):
+    actor_id: int
+    action: str
+    target: str
+    timestamp: date
+
+class AuditCreate(AuditBase):
+    pass
+
+class Audit(AuditBase):
     id: int
 
     class Config:

@@ -28,7 +28,7 @@
                             <i class="bi bi-plus-circle me-1"></i>Libri
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/book-list">Elenco dei libri</a></li>
+                            <li><a class="dropdown-item" href="/">Elenco dei libri</a></li>
                             <li><a class="dropdown-item" href="/book-add">Aggiungi libro</a></li>
                             <li><a class="dropdown-item" href="/book-mod">Modifica libro</a></li>
                             <li><a class="dropdown-item" href="/book-del">Cancella libro</a></li>
@@ -39,10 +39,14 @@
                             <i class="bi bi-plus-circle me-1"></i>Utenti
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/user-list">Elenco degli Utenti</a></li>
-                            <li><a class="dropdown-item" href="/user-add">Aggiungi Utente</a></li>
-                            <li><a class="dropdown-item" href="/user-mod">Modifica Utente</a></li>
-                            <li><a class="dropdown-item" href="/user-del">Cancella Utente</a></li>
+                            {% if current_user.role in ["admin", "librarian"] %}
+                                <li><a class="dropdown-item" href="/users">Elenco degli Utenti</a></li>
+                            {% endif %}
+                            {% if current_user.role in ["admin"] %}
+                                <li><a class="dropdown-item" href="/users/add">Aggiungi Utente</a></li>
+                                <li><a class="dropdown-item" href="/user-mod">Modifica Utente</a></li>
+                                <li><a class="dropdown-item" href="/user-del">Cancella Utente</a></li>
+                            {% endif %}
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -50,10 +54,12 @@
                             <i class="bi bi-plus-circle me-1"></i>Prestiti
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/loan-list">Elenco dei Prestiti</a></li>
-                            <li><a class="dropdown-item" href="/loan-add">Aggiungi Prestiti</a></li>
-                            <li><a class="dropdown-item" href="/loan-mod">Modifica Prestiti</a></li>
-                            <li><a class="dropdown-item" href="/loan-del">Cancella Prestiti</a></li>
+                            <li><a class="dropdown-item" href="/loan-hst">Storico dei Prestiti</a></li>
+                            <li><a class="dropdown-item" href="/loan-lst">Prestiti attivi</a></li>
+                            <li><a class="dropdown-item" href="/prenoto">Prenotazioni</a></li>
+                            {% if current_user.role in ["admin", "librarian"] %}
+                                <li><a class="dropdown-item" href="/loan-edit">Modifica prestiti</a></li>
+                            {% endif %}
                         </ul>
                     </li>
                     <li class="nav-item dropdown">

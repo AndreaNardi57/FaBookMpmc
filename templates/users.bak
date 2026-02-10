@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestione Utenti</title>
+</head>
+<body>
+
+<h1>Gestione Utenti</h1>
+
+<p>
+    <a href="/users/add">➕ Aggiungi nuovo utente</a>
+</p>
+
+<table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Email</th>
+            <th>Ruolo</th>
+            <th>Azioni</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.first_name }}</td>
+            <td>{{ user.last_name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+                <a href="/users/edit/{{ user.id }}">✏️ Modifica</a>
+                |
+                {% if user.id != current_user.id %}
+                    <a href="/users/delete/{{ user.id }}"
+                       onclick="return confirm('Confermi la cancellazione?')">
+                        🗑 Cancella
+                    </a>
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p>
+    <a href="/">⬅ Torna alla home</a>
+</p>
+
+</body>
+</html>

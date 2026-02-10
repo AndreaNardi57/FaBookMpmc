@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifica Utente</title>
+</head>
+<body>
+
+<h1>Modifica utente</h1>
+
+<form method="post">
+
+    {% if user.id == current_user.id %}
+        <p><em>Non puoi modificare ruolo e stato del tuo account.</em></p>
+    {% endif %}
+
+    <p>
+        <strong>Username:</strong> {{ user.username }}
+    </p>
+
+    <p>
+        <label>Email<br>
+            <input type="email" name="email" value="{{ user.email }}" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Nome<br>
+            <input type="text" name="first_name" value="{{ user.first_name }}" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Cognome<br>
+            <input type="text" name="last_name" value="{{ user.last_name }}" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Telefono<br>
+            <input type="text" name="phone" value="{{ user.phone }}">
+        </label>
+    </p>
+
+    <p>
+        <label>Ruolo<br>
+            <select name="role" {% if user.id == current_user.id %}disabled{% endif %}>
+                <option value="user" {% if user.role == "user" %}selected{% endif %}>Utente</option>
+                <option value="librarian" {% if user.role == "librarian" %}selected{% endif %}>Bibliotecario</option>
+                <option value="admin" {% if user.role == "admin" %}selected{% endif %}>Admin</option>
+            </select>
+        </label>
+    </p>
+
+    <p>
+        <label>
+            <input type="checkbox" name="is_active"
+                {% if user.is_active %}checked{% endif %}
+                {% if user.id == current_user.id %}disabled{% endif %}>
+            Utente attivo
+        </label>
+    </p>
+
+    <p>
+        <button type="submit">💾 Salva</button>
+        <a href="/users">❌ Annulla</a>
+    </p>
+
+</form>
+
+<hr>
+
+<p>
+    <a href="/users/{{ user.id }}/password">🔑 Cambia password</a>
+</p>
+
+</body>
+</html>

@@ -38,3 +38,9 @@ body {
     margin-right: 5px;
     margin-bottom: 5px;
 }
+
+.disabled {
+    pointer-events: none; /* Makes the item unclickable */
+    opacity: 0.6;         /* Grays out the item visually */
+    color: #aaa;          /* Optional: change text color */
+}   

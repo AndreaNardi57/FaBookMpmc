@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if message %}
+    <div class="alert alert-success">{{ message }}</div>
+    {% endif %}
+
+    <!--<h1>Prestiti</h1>-->
+
+    {% if users %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Telefono</th>
+                <th>Attivo</th>
+                <th>Stato</th>
+                <th>Data creazione</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.last_name}}</td>
+                <td>{{ user.first_name}}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.phone }}</td>
+                <td>{{ user.is_active }}</td>
+                <td>{{ user.status }}</td>
+                <td>{{ user.created_at }}</td>
+                <td>
+                    <a href="/mod-user/{{ user.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to modify this user?')">Modify</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No users in the library yet.</p>
+    {% endif %}
+
+{% endblock %}

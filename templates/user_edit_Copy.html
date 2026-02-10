@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Aggiungi Utente</title>
+</head>
+<body>
+
+<h1>Aggiungi nuovo utente</h1>
+
+<form method="post" action="/users/add">
+
+    <p>
+        <label>Username<br>
+            <input type="text" name="username" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Email<br>
+            <input type="email" name="email" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Nome<br>
+            <input type="text" name="first_name" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Cognome<br>
+            <input type="text" name="last_name" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Password<br>
+            <input type="password" name="password" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Ruolo<br>
+            <select name="role" required>
+                <option value="user">Utente</option>
+                <option value="librarian">Bibliotecario</option>
+                <option value="admin">Amministratore</option>
+            </select>
+        </label>
+    </p>
+
+    <p>
+        <button type="submit">💾 Salva</button>
+        <a href="/users">❌ Annulla</a>
+    </p>
+
+</form>
+
+</body>
+</html>
+
+
