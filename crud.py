@@ -1,3 +1,7 @@
+from fastapi import Depends, Request, HTTPException
+from typing import Optional
+from sqlalchemy.ext.asyncio import AsyncSession
+from database import engine, get_db
 from sqlalchemy.orm import Session
 from sqlalchemy import select, desc
 ## from models import Book
@@ -10,6 +14,20 @@ from schemas import BookCreate
 
 from datetime import datetime, timedelta
 from sqlalchemy import or_
+
+async def get_current_user(request: Request, db: AsyncSession = Depends(get_db)) -> Optional[models.User]:
+    username = request.cookies.get("mpmc_user")
+    if not username:
+        return None
+    result = db.execute(select(models.User).where(models.User.username == username))
+    return result.scalar_one_or_none()
+
+def require_role(user, allowed_roles: list[str]):
+    if user.role not in allowed_roles:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Permesso negato"
+        )
 
 def get_book_by_search(db: Session, query: str,search_field: str,skip: int = 0,limit: int = 1000):
     if search_field == "title":

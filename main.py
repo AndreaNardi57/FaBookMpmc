@@ -13,6 +13,7 @@ from datetime import datetime
 from typing import Optional
 from fastapi.responses import RedirectResponse, HTMLResponse
 from starlette.middleware.sessions import SessionMiddleware
+from routers import users
 
 # Create the database tables
 ## models.Base.metadata.create_all(bind=engine)
@@ -20,29 +21,18 @@ from starlette.middleware.sessions import SessionMiddleware
 # Initialize FastAPI app
 app = FastAPI(title="MPMC Library Management System")
 
+app.include_router(users.router)
+
 # Setup templates and static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 PerPage = 15
 page = 1
 
-async def get_current_user(request: Request, db: AsyncSession = Depends(get_db)) -> Optional[models.User]:
-    username = request.cookies.get("mpmc_user")
-    if not username:
-        return None
-    result = db.execute(select(models.User).where(models.User.username == username))
-    return result.scalar_one_or_none()
-
-def require_role(user, allowed_roles: list[str]):
-    if user.role not in allowed_roles:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Permesso negato"
-        )
 
 # Render Home Page
 @app.get("/", response_class=HTMLResponse)
-def home(request: Request, db: Session = Depends(get_db),page: int = page,per_page: int = PerPage, current_user: Optional[models.User] = Depends(get_current_user)):
+def home(request: Request, db: Session = Depends(get_db),page: int = page,per_page: int = PerPage, current_user: Optional[models.User] = Depends(crud.get_current_user)):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
     
@@ -65,7 +55,7 @@ def home(request: Request, db: Session = Depends(get_db),page: int = page,per_pa
 
 # Render Add Book Page
 @app.get("/add-book")
-def add_book_page(request: Request, current_user: Optional[models.User] = Depends(get_current_user)):
+def add_book_page(request: Request, current_user: Optional[models.User] = Depends(crud.get_current_user)):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
     return templates.TemplateResponse("add_book.html", {
@@ -83,7 +73,7 @@ def create_book_web(
     autore: str=Form(...), 
     titolo: str=Form(...), 
     db: Session = Depends(get_db),
-    current_user: Optional[models.User] = Depends(get_current_user)
+    current_user: Optional[models.User] = Depends(crud.get_current_user)
 ):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
@@ -129,7 +119,7 @@ def create_book_web(
 
 # Delete Book Endpoint
 @app.get("/delete-book/{id}")
-def delete_book_web(request: Request, id: str, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(get_current_user)):
+def delete_book_web(request: Request, id: str, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(crud.get_current_user)):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
 
@@ -168,7 +158,7 @@ def faq_page(request: Request):
     })
 
 @app.get("/search")
-def search_books(request: Request, query: str = "", search_field: str = "",  db: Session = Depends(get_db),page: int = 1,per_page: int = PerPage, current_user: Optional[models.User] = Depends(get_current_user)):
+def search_books(request: Request, query: str = "", search_field: str = "",  db: Session = Depends(get_db),page: int = 1,per_page: int = PerPage, current_user: Optional[models.User] = Depends(crud.get_current_user)):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
 
@@ -186,7 +176,7 @@ def search_books(request: Request, query: str = "", search_field: str = "",  db:
         })
 
 @app.get("/loan-hst")
-def loan_books(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(get_current_user)):
+def loan_books(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(crud.get_current_user)):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
 
@@ -198,7 +188,7 @@ def loan_books(request: Request, db: Session = Depends(get_db), current_user: Op
         })
 
 @app.get("/loan-lst")
-def loan_lst(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(get_current_user)):
+def loan_lst(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(crud.get_current_user)):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
 
@@ -211,7 +201,7 @@ def loan_lst(request: Request, db: Session = Depends(get_db), current_user: Opti
         })
 
 @app.get("/prenoto")
-def prenoto(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(get_current_user)):
+def prenoto(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(crud.get_current_user)):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
 
@@ -225,7 +215,7 @@ def prenoto(request: Request, db: Session = Depends(get_db), current_user: Optio
 
 # Booking Book Endpoint
 @app.get("/booking/{id}")
-def booking_web(request: Request, id: str, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(get_current_user)):
+def booking_web(request: Request, id: str, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(crud.get_current_user)):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
 
@@ -238,203 +228,12 @@ def booking_web(request: Request, id: str, db: Session = Depends(get_db), curren
     ##    "current_user": current_user
     ## })
 
-## User
-
-@app.get("/users")
-def user_list(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(get_current_user)):
-    if not current_user:
-        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
-
-    require_role(current_user, ["admin","librarian"])
-
-    user = crud.get_users(db)
-    return templates.TemplateResponse("users.html", {
-        "request": request, 
-        "users": user,
-        "current_user": current_user
-        })
-
-@app.get("/users/add")
-def user_add_page(
-    request: Request,
-    current_user: Optional[models.User] = Depends(get_current_user)
-):
-    require_role(current_user, ["admin"])
-
-    return templates.TemplateResponse(
-        "user_add.html",
-        {"request": request, "current_user": current_user}
-    )
-
-@app.post("/users/add")
-def user_add(
-    request: Request,
-    username: str = Form(...),
-    email: str = Form(...),
-    first_name: str = Form(...),
-    last_name: str = Form(...),
-    password: str = Form(...),
-    role: str = Form(...),
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user)
-):
-    require_role(current_user, ["admin"])
-
-    hashed_password = auth.get_password_hash(password)
-
-    new_user = models.User(
-        username=username,
-        email=email,
-        first_name=first_name,
-        last_name=last_name,
-        hashed_password=hashed_password,
-        role=role
-    )
-
-    crud.create_user(db, new_user)
-
-    return RedirectResponse("/users", status_code=303)
-
-@app.get("/users/edit/{user_id}")
-def user_edit_page(
-    request: Request,
-    user_id: int,
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user)
-):
-    require_role(current_user, ["admin"])
-
-    user = crud.get_user_by_id(db, user_id)
-    if not user:
-        raise HTTPException(404)
-
-    return templates.TemplateResponse(
-        "user_edit.html",
-        {
-            "request": request,
-            "user": user,
-            "current_user": current_user
-        }
-    )
-
-@app.post("/users/edit/{user_id}")
-def user_edit(
-    request: Request,
-    user_id: int,
-    email: str = Form(...),
-    first_name: str = Form(...),
-    last_name: str = Form(...),
-    phone: Optional[str] = Form(None),
-    role: str = Form(...),
-    is_active: Optional[str] = Form(None),
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user)
-):
-    require_role(current_user, ["admin"])
-    
-    user = crud.get_user_by_id(db, user_id)
-    if not user:
-        raise HTTPException(404)
-
-    # BLOCCO CRITICO
-    if user.id == current_user.id:
-        if role != current_user.role:
-            raise HTTPException(
-                status_code=400,
-                detail="Non puoi cambiare il tuo ruolo"
-            )
-        if not is_active:
-            raise HTTPException(
-                status_code=400,
-                detail="Non puoi disattivare il tuo account"
-            )
-
-    user.email = email
-    user.first_name = first_name
-    user.last_name = last_name
-    user.phone = phone if phone else None
-    user.role = role
-    user.is_active = True if is_active else False
-
-    db.commit()
-
-    crud.log_action(
-        db,
-        actor_id=current_user.id,
-        action="MODIFICA_UTENTE",
-        target=f"user_id={user.id}"
-    )
-
-    return RedirectResponse("/users", status_code=303)
-
-@app.get("/users/delete/{user_id}")
-def user_delete(
-    user_id: int,
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user)
-):
-    require_role(current_user, ["admin"])
-
-    user = crud.get_user_by_id(db, user_id)
-    if not user:
-        raise HTTPException(404)
-
-    db.delete(user)
-    db.commit()
-
-    return RedirectResponse("/users", status_code=303)
-
-@app.get("/users/{user_id}/password")
-def change_user_password_page(
-    request: Request,
-    user_id: int,
-    current_user: models.User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    require_role(current_user, ["admin"])
-
-    user = crud.get_user_by_id(db, user_id)
-    if not user:
-        raise HTTPException(404)
-
-    return templates.TemplateResponse(
-        "user_password.html",
-        {
-            "request": request,
-            "user": user,
-            "current_user": current_user
-        }
-    )
-
-@app.post("/users/{user_id}/password")
-def change_user_password(
-    user_id: int,
-    password: str = Form(...),
-    password_confirm: str = Form(...),
-    current_user: models.User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    require_role(current_user, ["admin"])
-
-    if password != password_confirm:
-        raise HTTPException(status_code=400, detail="Le password non coincidono")
-
-    user = crud.get_user_by_id(db, user_id)
-    if not user:
-        raise HTTPException(404)
-
-    user.hashed_password = auth.get_password_hash(password)
-    db.commit()
-
-    return RedirectResponse("/users", status_code=303)
-
-## Fine User
 
 @app.get("/loan-edit/{id}")
 def edit_loan(
     request: Request,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user)
+    current_user: models.User = Depends(crud.get_current_user)
 ):
     require_role(current_user, ["admin","librarian"])
 

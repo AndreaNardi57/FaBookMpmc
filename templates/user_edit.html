@@ -1,48 +1,50 @@
 <!DOCTYPE html>
 <html lang="it">
+{% extends "base.html" %}
 <head>
     <meta charset="UTF-8">
     <title>Modifica Utente</title>
 </head>
 <body>
 
-<h1>Modifica utente</h1>
+{% block content %}
+    <h1>Modifica utente</h1>
 
-{% if user.id == current_user.id %}
-    <p><em>Non puoi modificare ruolo e stato del tuo account.</em></p>
-{% endif %}
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
 
-<form method="post">
+    {% if user.id == current_user.id %}
+        <p><em>Non puoi modificare ruolo e stato del tuo account.</em></p>
+    {% endif %}
 
-    <p>
-        <strong>Username:</strong> {{ user.username }}
-    </p>
+    <form method="post">
 
-    <p>
-        <label>Email<br>
-            <input type="email" name="email" value="{{ user.email }}" required>
-        </label>
-    </p>
+        <div class="mb-3"><p>
+            <strong>Username:</strong> {{ user.username }}
+        </p></div>
 
-    <p>
-        <label>Nome<br>
-            <input type="text" name="first_name" value="{{ user.first_name }}" required>
-        </label>
-    </p>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" value="{{ user.email }}" required>
+        </div>
 
-    <p>
-        <label>Cognome<br>
-            <input type="text" name="last_name" value="{{ user.last_name }}" required>
-        </label>
-    </p>
-
-    <p>
-        <label>Telefono<br>
-            <input type="text" name="phone" value="{{ user.phone or '' }}">
-        </label>
-    </p>
-
-    <p>
+        <div class="mb-3">
+            <label for="first_name" class="form-label">Nome</label>
+            <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="last_name" class="form-label">Cognome</label>
+            <input type="text" class="form-control" name="last_name" value="{{ user.last_name }}" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="phone" class="form-label">Telefono</label>
+            <input type="text" class="form-control" name="phone" value="{{ user.phone or '' }}">
+        </div>
+        
+        <div class="mb-3"><p>
         <label>Ruolo<br>
             <select name="role" {% if user.id == current_user.id %}disabled{% endif %}>
                 <option value="user" {% if user.role == "user" %}selected{% endif %}>Utente</option>
@@ -50,30 +52,27 @@
                 <option value="admin" {% if user.role == "admin" %}selected{% endif %}>Admin</option>
             </select>
         </label>
-    </p>
-
-    <p>
+        </p></div>
+        <div class="mb-3"><p>
         <label>
             <input type="checkbox" name="is_active"
                 {% if user.is_active %}checked{% endif %}
                 {% if user.id == current_user.id %}disabled{% endif %}>
             Utente attivo
         </label>
-    </p>
-
-    <p>
+        </p></div>
+        <div class="mb-3"><p>
         <button type="submit">💾 Salva</button>
         <a href="/users">❌ Annulla</a>
-    </p>
+        </p></div>
 
 </form>
-
 <hr>
 
 <p>
     <a href="/users/{{ user.id }}/password">🔑 Cambia password</a>
 </p>
-
+{% endblock %}
 </body>
 </html>
 
