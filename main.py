@@ -206,7 +206,8 @@ def loan_lst(request: Request, db: Session = Depends(get_db), current_user: Opti
     return templates.TemplateResponse("prestiti.html", {
         "request": request, 
         "loans": loans,
-        "current_user": current_user
+        "current_user": current_user,
+        "flag": "true"
         })
 
 @app.get("/prenoto")
@@ -218,7 +219,8 @@ def prenoto(request: Request, db: Session = Depends(get_db), current_user: Optio
     return templates.TemplateResponse("prestiti.html", {
         "request": request, 
         "loans": loans,
-        "current_user": current_user
+        "current_user": current_user,
+        "flag": "true"
         })
 
 # Booking Book Endpoint
@@ -236,12 +238,14 @@ def booking_web(request: Request, id: str, db: Session = Depends(get_db), curren
     ##    "current_user": current_user
     ## })
 
+## User
+
 @app.get("/users")
 def user_list(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(get_current_user)):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
 
-    ## require_role(current_user, ["admin","librarian"])
+    require_role(current_user, ["admin","librarian"])
 
     user = crud.get_users(db)
     return templates.TemplateResponse("users.html", {
@@ -253,7 +257,7 @@ def user_list(request: Request, db: Session = Depends(get_db), current_user: Opt
 @app.get("/users/add")
 def user_add_page(
     request: Request,
-    current_user: models.User = Depends(get_current_user)
+    current_user: Optional[models.User] = Depends(get_current_user)
 ):
     require_role(current_user, ["admin"])
 
@@ -424,8 +428,9 @@ def change_user_password(
 
     return RedirectResponse("/users", status_code=303)
 
+## Fine User
 
-@app.get("/loan-edit")
+@app.get("/loan-edit/{id}")
 def edit_loan(
     request: Request,
     db: Session = Depends(get_db),

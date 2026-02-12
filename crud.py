@@ -52,10 +52,11 @@ def delete_book(db: Session, id: str):
 def get_loans(db: Session):
     stmt = (
         db.query(
+            Loan.id,
             Book.title,
             Book.author,
             Loan.status,
-            Copies.id,
+            Copies.id.label('cp_id'),
             User.username,
             Loan.borrowed,
             Loan.due_back,
@@ -72,10 +73,11 @@ def get_loans(db: Session):
 def get_loans_lst(db: Session):
     stmt = (
         db.query(
+            Loan.id,
             Book.title,
             Book.author,
             Loan.status,
-            Copies.id,
+            Copies.id.label('cp_id'),
             User.username,
             Loan.borrowed,
             Loan.due_back,
@@ -92,10 +94,11 @@ def get_loans_lst(db: Session):
 def get_prenotazioni(db: Session):
     stmt = (
         db.query(
+            Loan.id,
             Book.title,
             Book.author,
             Loan.status,
-            Copies.id,
+            Copies.id.label('cp_id'),
             User.username,
             Loan.borrowed,
             Loan.due_back,

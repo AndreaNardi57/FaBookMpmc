@@ -34,7 +34,9 @@
                 <td>{{ loan.due_back }}</td>
                 <td>{{ loan.return_date }}</td>
                 <td>
-                    <a href="/mod-loan/{{ loan.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to modify this loan?')">Modify</a>
+                    {% if flag %}
+                        <a href="/edit_loan/{{ loan.id }}" onclick="return confirm('Are you sure you want to modify this loan?')">✏️ Modifica</a>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
