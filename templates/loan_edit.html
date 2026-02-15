@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it">
+{% extends "base.html" %}
+<head>
+    <meta charset="UTF-8">
+    <title>Modifica Prestito</title>
+</head>
+<body>
+
+{% block content %}
+    <h1>Modifica prestito</h1>
+
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form method="post">
+
+        <div class="mb-3"><p>
+            <strong>Titolo:</strong> {{ qloans.title }}
+        </p></div>
+
+       <div class="mb-3"><p>
+            <strong>Autore:</strong> {{ qloans.author }}
+        </p></div>
+
+        <div class="mb-3"><p>
+            <strong>Utente:</strong> {{ qloans.username }}
+        </p></div>
+
+        <div class="mb-3"><p>
+            <label for="status" class="form-label">Stato</label>
+            <input type="text" class="form-control" name="status" value="{{ qloans.status }}" required>
+        </p></div>
+
+        <div class="mb-3"><p>
+            <label for="borrowed" class="form-label">Data prestito</label>
+            <input type="date" class="form-control" name="borrowed" value="{{ qloans.borrowed }}" required>
+        </p></div>
+        
+        <div class="mb-3"><p>
+            <label for="due_back" class="form-label">Scadenza prestito</label>
+            <input type="date" class="form-control" name="due_back" value="{{ qloans.due_back }}" required>
+        </p></div>
+        
+        <div class="mb-3"><p>
+            <label for="return_date" class="form-label">Data ritorno</label>
+            <input type="date" class="form-control" name="return_date" value="{{ qloans.return_date or '' }}">
+        </p></div>
+
+        <div class="mb-3"><p>
+        <button type="submit">💾 Salva</button>
+        <a href="/loans">❌ Annulla</a>
+        </p></div>
+        
+    </form>
+<hr>
+
+{% endblock %}
+</body>
+</html>
+

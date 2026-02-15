@@ -88,6 +88,27 @@ def get_loans(db: Session):
     results = stmt.all()
     return results
 
+def get_loans_by_id(db: Session, id: str):
+    stmt = (
+        db.query(
+            Loan.id,
+            Book.title,
+            Book.author,
+            Loan.status,
+            Copies.id.label('cp_id'),
+            User.username,
+            Loan.borrowed,
+            Loan.due_back,
+            Loan.return_date
+            )
+        .join(Copies, Copies.book_id == Book.id)
+        .join(Loan, Loan.copies_id == Copies.id)
+        .join(User, User.id == Loan.user_id)
+    ).filter(Loan.id == id)
+
+    results = stmt.first()
+    return results
+
 def get_loans_lst(db: Session):
     stmt = (
         db.query(

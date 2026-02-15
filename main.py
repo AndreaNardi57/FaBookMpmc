@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import Optional
 from fastapi.responses import RedirectResponse, HTMLResponse
 from starlette.middleware.sessions import SessionMiddleware
-from routers import users
+from routers import users, loans
 
 # Create the database tables
 ## models.Base.metadata.create_all(bind=engine)
@@ -22,6 +22,7 @@ from routers import users
 app = FastAPI(title="MPMC Library Management System")
 
 app.include_router(users.router)
+app.include_router(loans.router)
 
 # Setup templates and static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -175,72 +176,6 @@ def search_books(request: Request, query: str = "", search_field: str = "",  db:
         "current_user": current_user
         })
 
-@app.get("/loan-hst")
-def loan_books(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(crud.get_current_user)):
-    if not current_user:
-        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
-
-    loans = crud.get_loans(db)
-    return templates.TemplateResponse("prestiti.html", {
-        "request": request, 
-        "loans": loans,
-        "current_user": current_user
-        })
-
-@app.get("/loan-lst")
-def loan_lst(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(crud.get_current_user)):
-    if not current_user:
-        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
-
-    loans = crud.get_loans_lst(db)
-    return templates.TemplateResponse("prestiti.html", {
-        "request": request, 
-        "loans": loans,
-        "current_user": current_user,
-        "flag": "true"
-        })
-
-@app.get("/prenoto")
-def prenoto(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(crud.get_current_user)):
-    if not current_user:
-        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
-
-    loans = crud.get_prenotazioni(db)
-    return templates.TemplateResponse("prestiti.html", {
-        "request": request, 
-        "loans": loans,
-        "current_user": current_user,
-        "flag": "true"
-        })
-
-# Booking Book Endpoint
-@app.get("/booking/{id}")
-def booking_web(request: Request, id: str, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(crud.get_current_user)):
-    if not current_user:
-        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
-
-    crud.booking_book(db, id, current_user)
-    return RedirectResponse(url="/")
-    ## return templates.TemplateResponse("index.html", {
-    ##    "request": request, 
-    ##    "books": crud.get_books(db),
-    ##    "message": "Book returned successfully!",
-    ##    "current_user": current_user
-    ## })
-
-
-@app.get("/loan-edit/{id}")
-def edit_loan(
-    request: Request,
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(crud.get_current_user)
-):
-    require_role(current_user, ["admin","librarian"])
-
-    return templates.TemplateResponse(
-        "loan_edit.html",
-        {"request": request, "current_user": current_user}
-    )
 
 # --- LOGIN ---
 @app.get("/login", response_class=HTMLResponse)
@@ -275,64 +210,6 @@ async def logout_user(response: Response):
     response = RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
     response.delete_cookie(key="mpmc_user")
     return response
-
-# --- Register user ---
-@app.get("/register", response_class=HTMLResponse)
-async def register_page(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request})
-
-
-@app.post("/register/html")
-async def register_user(
-    request: Request,
-    first_name: str = Form(...),
-    last_name: str = Form(...),
-    username: str = Form(...),
-    hashed_password: str = Form(...),
-    email: str = Form(...),
-    phone: str = Form(...),
-    role: str = Form(...), 
-    is_active : bool = True,
-    db: AsyncSession = Depends(get_db)
-):
-    result = db.execute(select(models.User).where(models.User.username == username))
-    if result.scalar_one_or_none():
-        return templates.TemplateResponse("register.html", {"request": request, "error": "Username already exists"})
-
-    hashed_password = auth.get_password_hash(hashed_password)
-    new_user = models.User(username=username, hashed_password=hashed_password, role=role, first_name=fname, last_name=lname, email=mailaddr)
-    db.add(new_user)
-    db.commit()
-
-    return RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
-
-#---Change password -----------------
-@app.get("/password", response_class=HTMLResponse)
-async def change_password(request: Request):
-    return templates.TemplateResponse("password.html", {"request": request})
-
-@app.post("/password/html")
-async def mod_passwd(
-    request: Request,
-    username: str = Form(...),
-    hashed_password: str = Form(...),
-    db: AsyncSession = Depends(get_db)
-):
-    
-    user = db.query(models.User).filter(models.User.username == username).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    ##if not verify_password(payload.current_password, user.password_hash):
-    ##    raise HTTPException(
-    ##        status_code=status.HTTP_401_UNAUTHORIZED,
-    ##        detail="Invalid current password"
-    ##    )
-
-    user.hashed_password = auth.get_password_hash(hashed_password)
-    db.commit()
-
-    return RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
 
 # Running the application
 if __name__ == "__main__":

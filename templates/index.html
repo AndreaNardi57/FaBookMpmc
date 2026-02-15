@@ -136,7 +136,7 @@
                 <td>{{ book.description }}</td>
                 <td>{{ book.status }}</td>
                 <td>
-                    <a href="/booking/{{ book.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to booking this book?')">Prenota</a>
+                    <a href="/loans/booking/{{ book.id }}" onclick="return confirm('Are you sure you want to booking this book?')">Prenota</a>
                 </td>
             </tr>
             {% endfor %}
