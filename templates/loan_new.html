@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Nuovo Noleggio{% endblock %}
+
+{% block content %}
+
+<h1>Nuovo Noleggio</h1>
+
+<!-- 🔎 BLOCCO RICERCA (METODO GET) -->
+<form method="get" style="margin-bottom:20px; padding:10px; border:1px solid #ccc;">
+    <h3>Ricerca</h3>
+
+    <p>
+        <label>Cerca libro</label><br>
+        <input type="text" name="book_query"
+               value="{{ request.query_params.get('book_query', '') }}"
+               placeholder="Titolo libro">
+    </p>
+
+    <p>
+        <label>Cerca utente</label><br>
+        <input type="text" name="user_query"
+               value="{{ request.query_params.get('user_query', '') }}"
+               placeholder="Username o nome">
+    </p>
+
+    <button type="submit">🔎 Cerca</button>
+</form>
+
+<form method="post">
+
+    <!-- SELECT LIBRO (risultato della ricerca) -->
+    <p>
+        <label>Libro</label><br>
+        <select name="book_id" required>
+            {% for book in books %}
+                <option value="{{ book.id }}">
+                    {{ book.title }} - {{ book.author }}
+                </option>
+            {% else %}
+                <option disabled>Nessun libro trovato</option>
+            {% endfor %}
+        </select>
+    </p>
+
+    <!-- SELECT UTENTE (risultato della ricerca) -->
+    <p>
+        <label>Utente</label><br>
+        <select name="user_id" required>
+            {% for user in users %}
+                <option value="{{ user.id }}">
+                    {{ user.username }} ({{ user.first_name }} {{ user.last_name }})
+                </option>
+            {% else %}
+                <option disabled>Nessun utente trovato</option>
+            {% endfor %}
+        </select>
+    </p>
+
+
+    <!-- 📌 Stato -->
+    <p>
+        <label>Stato</label><br>
+        <select name="status">
+            <option value="available">available</option>
+            <option value="booked">booked</option>
+            <option value="on_loan">on_loan</option>
+            <option value="damaged">damaged</option>
+            <option value="lost">lost</option>
+        </select>
+    </p>
+
+    <p>
+        <button type="submit">💾 Salva</button>
+        <a href="/loans">Annulla</a>
+    </p>
+
+</form>
+
+{% endblock %}

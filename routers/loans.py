@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, desc
+from sqlalchemy import update
 import auth
 import crud
 import models
@@ -86,3 +87,85 @@ def edit_loan(request: Request, id: int, db: Session = Depends(get_db), current_
         "qloans": qloans,
         "current_user": current_user
         })
+
+@router.post("/edit/{id}")
+def post_edit_loan(
+    request: Request, id: int,
+    status: str = Form(...),
+    borrowed: str = Form(...),
+    due_back: str = Form(...),
+    return_date: str = Form(...),
+    db: Session = Depends(get_db), 
+    current_user: models.User = Depends(crud.get_current_user)
+):
+    crud.require_role(current_user, ["admin", "librarian"])
+    loan_query = db.query(models.Loan).filter(models.Loan.id==id).first()
+
+    db.query(models.Loan).filter(models.Loan.id == id).update({"status": status, "borrowed": borrowed, "due_back": due_back, "return_date": return_date})
+
+
+    ## new_loan = models.Loan(
+    ##    copies_id = loan_query.copies_id,
+    ##    user_id = loan_query.user_id,
+    ##    status = status,
+    ##    borrowed = borrowed,
+    ##    due_back = due_back,
+    ##    return_date = return_date
+    ##)
+
+    ## db.update(new_loan)
+    db.commit()
+
+    return RedirectResponse("/", status_code=303)
+
+@router.get("/new")
+def new_loan_page(
+    request: Request,
+    book_query: str = "",
+    user_query: str = "",
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(crud.get_current_user)
+):
+    crud.require_role(current_user, ["admin", "librarian"])
+
+    books_query = db.query(models.Book)
+    if book_query:
+        books_query = books_query.filter(models.Book.title.ilike(f"%{book_query}%"))
+
+    users_query = db.query(models.User).filter(models.User.is_active == True)
+    if user_query:
+        users_query = users_query.filter(models.User.username.ilike(f"%{user_query}%"))
+
+    return templates.TemplateResponse(
+        "loan_new.html",
+        {
+            "request": request,
+            "books": books_query.limit(20).all(),
+            "users": users_query.limit(20).all(),
+            "current_user": current_user
+        }
+    )
+
+
+@router.post("/new")
+def create_loan(
+    book_id: int = Form(...),
+    user_id: int = Form(...),
+    status: str = Form(...),
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(crud.get_current_user)
+):
+    crud.require_role(current_user, ["admin", "librarian"])
+
+    new_loan = models.Loan(
+        book_id = book_id,
+        user_id = user_id,
+        status = status,
+        borrowed = datetime.utcnow(),
+        due_back = datetime.utcnow() + timedelta(days=30),
+    )
+
+    db.add(new_loan)
+    db.commit()
+
+    return RedirectResponse("/", status_code=303)

@@ -29,8 +29,17 @@
         </p></div>
 
         <div class="mb-3"><p>
-            <label for="status" class="form-label">Stato</label>
-            <input type="text" class="form-control" name="status" value="{{ qloans.status }}" required>
+            <!-- <label for="status" class="form-label">Stato</label>
+            <input type="text" class="form-control" name="status" value="{{ qloans.status }}" required> -->
+            <label>Stato</label><br>
+            <select name="status" >
+                <option value="{{ qloans.status }}" selected>{{ qloans.status }}</option>
+                <option value="available">available</option>
+                <option value="booked">booked</option>
+                <option value="on_loan">on_loan</option>
+                <option value="damaged">damaged</option>
+                <option value="lost">lost</option>
+            </select>
         </p></div>
 
         <div class="mb-3"><p>
