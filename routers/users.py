@@ -53,20 +53,22 @@ def user_add(
     email: str = Form(...),
     first_name: str = Form(...),
     last_name: str = Form(...),
-    password: str = Form(...),
-    role: str = Form(...),
+    phone: Optional[str] = Form(None),
+    hashed_password: str = Form(...),
+    role: Optional[str] = "user",
     db: Session = Depends(get_db),
     current_user: models.User = Depends(crud.get_current_user)
 ):
     crud.require_role(current_user, ["admin"])
 
-    hashed_password = auth.get_password_hash(password)
+    hashed_password = auth.get_password_hash(hashed_password)
 
     new_user = models.User(
         username=username,
         email=email,
         first_name=first_name,
         last_name=last_name,
+        phone = phone if phone else None,
         hashed_password=hashed_password,
         role=role
     )

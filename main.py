@@ -15,6 +15,7 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 from starlette.middleware.sessions import SessionMiddleware
 from routers import users, loans
 
+
 # Create the database tables
 ## models.Base.metadata.create_all(bind=engine)
 

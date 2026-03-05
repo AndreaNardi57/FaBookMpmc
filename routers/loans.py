@@ -157,6 +157,22 @@ def create_loan(
 ):
     crud.require_role(current_user, ["admin", "librarian"])
 
+    # 🔎 Trova copia disponibile
+    copy = crud.get_available_copy(db, book_id)
+
+    if not copy:
+        flash_message = "Nessuna copia disponibile per questo libro."
+        return templates.TemplateResponse(
+            "loan_new.html",
+            {
+                "request": request,
+                "books": db.query(models.Book).all(),
+                "users": db.query(models.User).filter(models.User.is_active == True).all(),
+                "error": flash_message,
+                "current_user": current_user
+            }
+        )
+
     new_loan = models.Loan(
         book_id = book_id,
         user_id = user_id,

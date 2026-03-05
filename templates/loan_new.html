@@ -36,6 +36,7 @@
             {% for book in books %}
                 <option value="{{ book.id }}">
                     {{ book.title }} - {{ book.author }}
+                    (Copie: {{ book.copies|length }})
                 </option>
             {% else %}
                 <option disabled>Nessun libro trovato</option>

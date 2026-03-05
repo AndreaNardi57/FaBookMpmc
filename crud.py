@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database import engine, get_db
 from sqlalchemy.orm import Session
 from sqlalchemy import select, desc
+from sqlalchemy import and_
 ## from models import Book
 ## from schemas import BookCreate
 import models
@@ -193,3 +194,19 @@ def log_action(db, actor_id: int, action: str, target: str = None):
     )
     db.add(log)
     db.commit()
+
+
+def get_available_copy(db: Session, book_id: int):
+    
+    copies = db.query(Copies).filter(Copies.book_id == book_id).all()
+
+    for copy in copies:
+        active_loan = db.query(Loan).filter(
+            Loan.copies_id == copy.id,
+            Loan.status == "on_loan"
+        ).first()
+
+        if not active_loan:
+            return copy
+
+    return None
