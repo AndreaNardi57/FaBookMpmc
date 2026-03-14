@@ -130,14 +130,16 @@ def user_edit(
                 status_code=400,
                 detail="Non puoi disattivare il tuo account"
             )
+    else:
+        user.role = role
+        user.is_active = True if is_active else False
+
 
     user.email = email
     user.first_name = first_name
     user.last_name = last_name
     user.phone = phone if phone else None
-    user.role = role
-    user.is_active = True if is_active else False
-
+    
     db.commit()
 
     crud.log_action(

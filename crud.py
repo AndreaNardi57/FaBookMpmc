@@ -1,4 +1,4 @@
-from fastapi import Depends, Request, HTTPException
+from fastapi import Depends, Request, HTTPException, status
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import engine, get_db
@@ -68,7 +68,10 @@ def delete_book(db: Session, id: str):
         db.commit()
     return db_book
 
-def get_loans(db: Session):
+def get_loans(db: Session, id=None):
+    query_filter = []
+    if id:
+        query_filter.append(User.id == id)
     stmt = (
         db.query(
             Loan.id,
@@ -84,7 +87,8 @@ def get_loans(db: Session):
         .join(Copies, Copies.book_id == Book.id)
         .join(Loan, Loan.copies_id == Copies.id)
         .join(User, User.id == Loan.user_id)
-    ).order_by(Loan.borrowed)
+    ).filter(*query_filter).order_by(Loan.borrowed)
+    
 
     results = stmt.all()
     return results
@@ -110,7 +114,11 @@ def get_loans_by_id(db: Session, id: str):
     results = stmt.first()
     return results
 
-def get_loans_lst(db: Session):
+def get_loans_lst(db: Session, id=None):
+    query_filter = []
+    if id:
+        query_filter.append(User.id == id)
+    
     stmt = (
         db.query(
             Loan.id,
@@ -126,12 +134,16 @@ def get_loans_lst(db: Session):
         .join(Copies, Copies.book_id == Book.id)
         .join(Loan, Loan.copies_id == Copies.id)
         .join(User, User.id == Loan.user_id)
-    ).where(Loan.status == "on_loan").order_by(Loan.borrowed)
-
+    ).filter(Loan.status == "on_loan").filter(*query_filter).order_by(Loan.borrowed)
+    
     results = stmt.all()
     return results
 
-def get_prenotazioni(db: Session):
+def get_prenotazioni(db: Session, id=None):
+    query_filter = []
+    if id:
+        query_filter.append(User.id == id)
+    
     stmt = (
         db.query(
             Loan.id,
@@ -147,8 +159,8 @@ def get_prenotazioni(db: Session):
         .join(Copies, Copies.book_id == Book.id)
         .join(Loan, Loan.copies_id == Copies.id)
         .join(User, User.id == Loan.user_id)
-    ).where(Loan.status == "booked").order_by(Loan.borrowed)
-
+    ).filter(Loan.status == "booked").filter(*query_filter).order_by(Loan.borrowed)
+    
     results = stmt.all()
     return results
 

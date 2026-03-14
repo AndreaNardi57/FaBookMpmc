@@ -23,8 +23,11 @@ templates = Jinja2Templates(directory="templates")
 def loan_books(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(crud.get_current_user)):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+    if current_user.role == "user":
+        loans = crud.get_loans(db, current_user.id)
+    else:
+        loans = crud.get_loans(db)
 
-    loans = crud.get_loans(db)
     return templates.TemplateResponse("prestiti.html", {
         "request": request, 
         "loans": loans,
@@ -35,8 +38,11 @@ def loan_books(request: Request, db: Session = Depends(get_db), current_user: Op
 def loan_lst(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(crud.get_current_user)):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+    if current_user.role == "user":
+        loans = crud.get_loans_lst(db, current_user.id)
+    else:
+        loans = crud.get_loans_lst(db)
 
-    loans = crud.get_loans_lst(db)
     return templates.TemplateResponse("prestiti.html", {
         "request": request, 
         "loans": loans,
@@ -48,8 +54,11 @@ def loan_lst(request: Request, db: Session = Depends(get_db), current_user: Opti
 def prenoto(request: Request, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(crud.get_current_user)):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+    if current_user.role == "user":
+        loans = crud.get_prenotazioni(db, current_user.id)
+    else:
+        loans = crud.get_prenotazioni(db)
 
-    loans = crud.get_prenotazioni(db)
     return templates.TemplateResponse("prestiti.html", {
         "request": request, 
         "loans": loans,
@@ -65,13 +74,6 @@ def booking_web(request: Request, id: str, db: Session = Depends(get_db), curren
 
     crud.booking_book(db, id, current_user)
     return RedirectResponse(url="/")
-    ## return templates.TemplateResponse("index.html", {
-    ##    "request": request, 
-    ##    "books": crud.get_books(db),
-    ##    "message": "Book returned successfully!",
-    ##    "current_user": current_user
-    ## })
-
 
 @router.get("/edit/{id}")
 def edit_loan(request: Request, id: int, db: Session = Depends(get_db), current_user: models.User = Depends(crud.get_current_user)):

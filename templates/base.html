@@ -29,9 +29,11 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/">Elenco dei libri</a></li>
-                            <li><a class="dropdown-item" href="/book-add">Aggiungi libro</a></li>
-                            <li><a class="dropdown-item" href="/book-mod">Modifica libro</a></li>
-                            <li><a class="dropdown-item" href="/book-del">Cancella libro</a></li>
+                            {% if current_user.role in ["admin", "librarian"] %}
+                                <li><a class="dropdown-item" href="/book-add">Aggiungi libro</a></li>
+                                <li><a class="dropdown-item" href="/book-mod">Modifica libro</a></li>
+                                <li><a class="dropdown-item" href="/book-del">Cancella libro</a></li>
+                            {% endif %}
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -44,9 +46,9 @@
                             {% endif %}
                             {% if current_user.role in ["admin"] %}
                                 <li><a class="dropdown-item" href="/users/add">Aggiungi Utente</a></li>
-                                <li><a class="dropdown-item" href="/user-mod">Modifica Utente</a></li>
-                                <li><a class="dropdown-item" href="/user-del">Cancella Utente</a></li>
+                                <!-- <li><a class="dropdown-item" href="/user-del">Cancella Utente</a></li> -->
                             {% endif %}
+                            <li><a class="dropdown-item" href="/user-mod">Modifica Utente</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -57,10 +59,9 @@
                             <li><a class="dropdown-item" href="/loans">Storico dei Prestiti</a></li>
                             <li><a class="dropdown-item" href="/loans/list">Prestiti attivi</a></li>
                             <li><a class="dropdown-item" href="/loans/booking">Prenotazioni</a></li>
-                            <li><a class="dropdown-item" href="/loans/new">Nuovo prestito</a></li>
-                            <!-- {% if current_user.role in ["admin", "librarian"] %}
-                                <li><a class="dropdown-item" href="/loans/edit">Modifica prestiti</a></li>
-                            {% endif %} -->
+                            {% if current_user.role in ["admin", "librarian"] %}
+                                <li><a class="dropdown-item" href="/loans/new">Nuovo prestito</a></li>
+                            {% endif %}
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
