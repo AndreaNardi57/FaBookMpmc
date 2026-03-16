@@ -7,26 +7,38 @@
     <div class="alert alert-danger">{{ error }}</div>
     {% endif %}
 
-    <form method="post" action="/add-book">
+    <form method="post" action="/book/add">
         <div class="mb-3">
-            <label for="operazione" class="form-label">Operazione</label>
-            <input type="text" class="form-control" id="operazione" name="operazione" required>
+            <label for="title" class="form-label">Titolo</label>
+            <input type="text" class="form-control" id="title" name="title" required>
         </div>
         <div class="mb-3">
-            <label for="dataRitiro" class="form-label">Data Prestito</label>
-            <input type="date" class="form-control" id="dataRitiro" name="dataRitiro">
+            <label for="author" class="form-label">Autore</label>
+            <input type="text" class="form-control" id="author" name="author" required>
         </div>
         <div class="mb-3">
-            <label for="dataChiusura" class="form-label">Data Restituzione</label>
-            <input type="date" class="form-control" id="dataChiusura" name="dataChiusura">
+            <label for="isbn" class="form-label">Isbn</label>
+            <input type="text" class="form-control" id="isbn" name="isbn">
         </div>
         <div class="mb-3">
-            <label for="autore" class="form-label">Autore</label>
-            <input type="text" class="form-control" id="autore" name="autore" required>
+            <label for="publisher" class="form-label">Casa editrice</label>
+            <input type="text" class="form-control" id="publisher" name="publisher">
         </div>
         <div class="mb-3">
-            <label for="titolo" class="form-label">Titolo</label>
-            <input type="text" class="form-control" id="titolo" name="titolo" required>
+            <label for="yearpubblish" class="form-label">Anno pubblicazione</label>
+            <input type="text" class="form-control" id="yearpubblish" name="yearpubblish">
+        </div>
+        <div class="mb-3">
+            <label for="release" class="form-label">Edizione</label>
+            <input type="text" class="form-control" id="release" name="release">
+        </div>
+        <div class="mb-3">
+            <label for="language" class="form-label">Lingua</label>
+            <input type="text" class="form-control" id="language" name="language">
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Contenuto</label>
+            <input type="text" class="form-control" id="description" name="description">
         </div>
         <button type="submit" class="btn btn-primary">Add Book</button>
     </form>

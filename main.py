@@ -56,7 +56,7 @@ def home(request: Request, db: Session = Depends(get_db),page: int = page,per_pa
     })
 
 # Render Add Book Page
-@app.get("/add-book")
+@app.get("/book/add")
 def add_book_page(request: Request, current_user: Optional[models.User] = Depends(crud.get_current_user)):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
@@ -66,32 +66,40 @@ def add_book_page(request: Request, current_user: Optional[models.User] = Depend
     })
 
 # Handle Book Creation from Web Form
-@app.post("/add-book")
+@app.post("/book/add")
 def create_book_web(
     request: Request,
-    operazione: str=Form(...),
-    dataRitiro: str=Form(...),
-    dataChiusura: str=Form(...),
-    autore: str=Form(...), 
-    titolo: str=Form(...), 
+    title: str=Form(...), 
+    author: str=Form(...), 
+    isbn: Optional[str]=Form(None),
+    publisher: Optional[str]=Form(None),
+    yearpubblish: Optional[str]=Form(None),
+    release: Optional[str]=Form(None),
+    language: Optional[str]=Form(None),
+    description: Optional[str]=Form(None),
     db: Session = Depends(get_db),
     current_user: Optional[models.User] = Depends(crud.get_current_user)
 ):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+    ## now = datetime.now()
+    ## today = now.date()
 
     # Create book schema
     book_data = schemas.BookCreate(
-        operazione=operazione,
-        dataRitiro=dataRitiro,
-        dataChiusura=dataChiusura,
-        autore=autore,
-        titolo=titolo
+        title = title, 
+        author = author, 
+        isbn = isbn,
+        publisher = publisher,
+        yearpubblish = yearpubblish,
+        release = release,
+        language = language,
+        description = description
         )
 
 
     # Check if book already exists
-    existing_book = crud.get_book_by_titolo(db, titolo,'titolo')
+    existing_book = crud.get_book_by_search(db, title,'titolo')
     if existing_book:
         return templates.TemplateResponse("add_book.html", {
             "request": request, 
@@ -99,33 +107,76 @@ def create_book_web(
         })
     
     # Create book
-    create_book(db, book_data)
+    crud.create_book(db, book_data)
 
+    return RedirectResponse("/", status_code=303)
+
+# Modifica il libro
+@app.get("/book/modify")
+def book_mod_page(
+    request: Request, 
+    db: Session = Depends(get_db),
+    page: int = page,
+    per_page: int = PerPage, 
+    current_user: Optional[models.User] = Depends(crud.get_current_user)
+):
+    
+    if not current_user:
+        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+    crud.require_role(current_user, ["admin"])
+    
     # Conteggio totale dei record
     total = crud.get_books_count(db)
+    
+    books = crud.get_books(db,page,per_page)
     
     # Calcolo del numero totale di pagine
     total_pages = (total + per_page - 1) // per_page
 
-    
-    # Redirect to home page
-    return templates.TemplateResponse("index.html", {
+    return templates.TemplateResponse("book_mod.html", {
         "request": request, 
-        "books": get_books(db),
+        "books": books,
         "page": page,
         "per_page": per_page,
         "total_pages": total_pages,
-        "message": "Book added successfully!",
         "current_user": current_user
     })
 
+# Modifica libro
+@app.get("/book/edit/{book_id}")
+def book_edit_page(
+    request: Request, 
+    book_id: str, 
+    db: Session = Depends(get_db), 
+    current_user: Optional[models.User] = Depends(crud.get_current_user)
+):
+    crud.require_role(current_user, ["admin"])
+
+    book = crud.get_book_by_id(db, book_id)
+    if not book:
+        raise HTTPException(404)
+
+    return templates.TemplateResponse(
+        "book_edit.html",
+        {
+            "request": request,
+            "book": book,
+            "current_user": current_user
+        }
+    )
+
+
+
+
+
+
 # Delete Book Endpoint
-@app.get("/delete-book/{id}")
-def delete_book_web(request: Request, id: str, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(crud.get_current_user)):
+@app.get("/book/delete/{book_id}")
+def delete_book_web(request: Request, book_id: str, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(crud.get_current_user)):
     if not current_user:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
 
-    delete_book(db, id)
+    delete_book(db, book_id)
     return templates.TemplateResponse("index.html", {
         "request": request, 
         "books": get_books(db),

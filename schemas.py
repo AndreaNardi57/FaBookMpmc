@@ -5,13 +5,13 @@ from datetime import datetime, date
 class BookBase(BaseModel):
     title: str
     author: str
-    isbn: str
-    publisher: str
-    yearpubblish: str
-    release: str
-    language: str
-    description: str
-    created_at: date
+    isbn: str | None = None
+    publisher: str | None = None
+    yearpubblish: str | None = None
+    release: str | None = None
+    language: str | None = None
+    description: str | None = None
+    ## created_at: date
     
 class BookCreate(BookBase):
     pass

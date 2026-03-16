@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Modifica libro{% endblock %}
+
+{% block content %}
+
+<h1>Modifica libro</h1>
+
+
+<form method="post">
+
+    </p>
+        <div class="mb-3">
+            <label for="title" class="form-label">Titolo</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{ book.title }}">
+        </div>
+        <div class="mb-3">
+            <label for="author" class="form-label">Autore</label>
+            <input type="text" class="form-control" id="author" name="author" value="{{ book.author }}">
+        </div>
+        <div class="mb-3">
+            <label for="isbn" class="form-label">Isbn</label>
+            <input type="text" class="form-control" id="isbn" name="isbn" value="{{ book.isbn }}">
+        </div>
+        <div class="mb-3">
+            <label for="publisher" class="form-label">Casa editrice</label>
+            <input type="text" class="form-control" id="publisher" name="publisher" value="{{ book.publishe }}">
+        </div>
+        <div class="mb-3">
+            <label for="yearpubblish" class="form-label">Anno pubblicazione</label>
+            <input type="text" class="form-control" id="yearpubblish" name="yearpubblish" value="{{ book.yearpubblish }}">
+        </div>
+        <div class="mb-3">
+            <label for="release" class="form-label">Edizione</label>
+            <input type="text" class="form-control" id="release" name="release" value="{{ book.release }}">
+        </div>
+        <div class="mb-3">
+            <label for="language" class="form-label">Lingua</label>
+            <input type="text" class="form-control" id="language" name="language" value="{{ book.language }}">
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Contenuto</label>
+            <input type="text" class="form-control" id="description" name="description" value="{{ book.description }}">
+        </div>
+
+        <p><button type="submit">💾 Salva</button>
+        <a href="/">❌ Annulla</a>
+        </p>
+    </form>
+{% endblock %}

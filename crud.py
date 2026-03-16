@@ -68,6 +68,9 @@ def delete_book(db: Session, id: str):
         db.commit()
     return db_book
 
+def get_book_by_id(db: Session, book_id: int):
+    return db.query(Book).filter(Book.id == book_id).first()
+
 def get_loans(db: Session, id=None):
     query_filter = []
     if id:

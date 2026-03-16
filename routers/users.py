@@ -10,7 +10,7 @@ import crud
 import models
 import schemas
 from database import engine, get_db
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional
 from fastapi.responses import RedirectResponse, HTMLResponse
 from starlette.middleware.sessions import SessionMiddleware
@@ -76,6 +76,27 @@ def user_add(
     crud.create_user(db, new_user)
 
     return RedirectResponse("/users", status_code=303)
+
+@router.get("/modify")
+def user_modify(
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(crud.get_current_user)
+):
+    crud.require_role(current_user, ["user"])
+
+    user = crud.get_user_by_id(db, current_user.id)
+    if not user:
+        raise HTTPException(404)
+
+    return templates.TemplateResponse(
+        "user_edit.html",
+        {
+            "request": request,
+            "user": user,
+            "current_user": current_user
+        }
+    )
 
 @router.get("/edit/{user_id}")
 def user_edit_page(
@@ -148,8 +169,12 @@ def user_edit(
         action="MODIFICA_UTENTE",
         target=f"user_id={user.id}"
     )
+    if current_user.role == "user":
+        url = "/"
+    else:
+        url = "/users"
 
-    return RedirectResponse("/users", status_code=303)
+    return RedirectResponse(url, status_code=303)
 
 @router.get("/delete/{user_id}")
 def user_delete(
