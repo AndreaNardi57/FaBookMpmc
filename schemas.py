@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, field_validator
 from datetime import datetime, date
+from typing import Optional
 
 
 class BookBase(BaseModel):
@@ -7,7 +8,7 @@ class BookBase(BaseModel):
     author: str
     isbn: str | None = None
     publisher: str | None = None
-    yearpubblish: str | None = None
+    yearpubblish: Optional[int] = None
     release: str | None = None
     language: str | None = None
     description: str | None = None

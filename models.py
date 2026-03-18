@@ -16,12 +16,11 @@ class Book(Base):
     author = Column(Text, nullable = False)
     isbn = Column(String)
     publisher = Column(Text)
-    yearpubblish = Column(Integer)
+    yearpubblish = Column(Integer, nullable = True)
     release = Column(Text)
     language = Column(String)
     description = Column(Text)
     created_at = Column(Date, server_default=text(Date_Value))
-
     copies = relationship("Copies", back_populates="book")
 
 class User(Base):

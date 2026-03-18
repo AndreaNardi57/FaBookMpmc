@@ -165,10 +165,41 @@ def book_edit_page(
         }
     )
 
+@app.post("/book/edit/{book_id}")
+def book_edit_post(
+    request: Request,
+    id: str=Form(...),
+    title: str=Form(...), 
+    author: str=Form(...), 
+    isbn: Optional[str]=Form(None),
+    publisher: Optional[str]=Form(None),
+    yearpubblish: Optional[int]=Form(0),
+    release: Optional[str]=Form(None),
+    language: Optional[str]=Form(None),
+    description: Optional[str]=Form(None),
+    db: Session = Depends(get_db),
+    current_user: Optional[models.User] = Depends(crud.get_current_user)
+):
+    if not current_user:
+        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+    crud.require_role(current_user, ["admin","librarian"])
 
+    book = crud.get_book_by_id(db, id)
+    if not book:
+        raise HTTPException(404)
+    
+    book.title = title, 
+    book.author = author, 
+    book.isbn = isbn,
+    book.publisher = publisher,
+    book.yearpubblish = yearpubblish,
+    book.release = release,
+    book.language = language,
+    book.description = description
+    
+    db.commit()
 
-
-
+    return RedirectResponse("/", status_code=303)
 
 # Delete Book Endpoint
 @app.get("/book/delete/{book_id}")
@@ -225,7 +256,7 @@ def search_books(request: Request, query: str = "", search_field: str = "",  db:
     return templates.TemplateResponse("filtered.html", {
         "request": request, 
         "books": books,
-        "current_user": current_user
+       "current_user": current_user
         })
 
 
