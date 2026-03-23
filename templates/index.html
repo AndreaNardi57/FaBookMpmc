@@ -137,6 +137,9 @@
                 <td>{{ book.status }}</td>
                 <td>
                     <a href="/loans/booking/{{ book.id }}" onclick="return confirm('Are you sure you want to booking this book?')">Prenota</a>
+                    {% if current_user.role in ("admin", "librarian") %}
+                        <a href="/book/edit/{{ book.id }}" onclick="return confirm('Are you sure you want to editing this book?')">Modifica</a>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

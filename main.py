@@ -112,35 +112,35 @@ def create_book_web(
     return RedirectResponse("/", status_code=303)
 
 # Modifica il libro
-@app.get("/book/modify")
-def book_mod_page(
-    request: Request, 
-    db: Session = Depends(get_db),
-    page: int = page,
-    per_page: int = PerPage, 
-    current_user: Optional[models.User] = Depends(crud.get_current_user)
-):
-    
-    if not current_user:
-        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
-    crud.require_role(current_user, ["admin"])
-    
-    # Conteggio totale dei record
-    total = crud.get_books_count(db)
-    
-    books = crud.get_books(db,page,per_page)
-    
-    # Calcolo del numero totale di pagine
-    total_pages = (total + per_page - 1) // per_page
-
-    return templates.TemplateResponse("book_mod.html", {
-        "request": request, 
-        "books": books,
-        "page": page,
-        "per_page": per_page,
-        "total_pages": total_pages,
-        "current_user": current_user
-    })
+##@app.get("/book/modify")
+##def book_mod_page(
+##    request: Request,
+##    db: Session = Depends(get_db),
+##    page: int = page,
+##    per_page: int = PerPage,
+##    current_user: Optional[models.User] = Depends(crud.get_current_user)
+##):
+##
+##    if not current_user:
+##        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+##    crud.require_role(current_user, ["admin"])
+##
+##    # Conteggio totale dei record
+##    total = crud.get_books_count(db)
+##
+##    books = crud.get_books(db,page,per_page)
+##
+##    # Calcolo del numero totale di pagine
+##    total_pages = (total + per_page - 1) // per_page
+##
+##    return templates.TemplateResponse("book_mod.html", {
+##        "request": request,
+##        "books": books,
+##        "page": page,
+##        "per_page": per_page,
+##        "total_pages": total_pages,
+##        "current_user": current_user
+##    })
 
 # Modifica libro
 @app.get("/book/edit/{book_id}")
