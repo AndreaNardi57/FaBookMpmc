@@ -247,16 +247,16 @@ def search_books(request: Request, query: str = "", search_field: str = "",  db:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
 
     # Conteggio totale dei record
-    #total = crud.get_books_count_filtered(db,query)
+    total = crud.get_books_count_filtered(db,query,search_field)
 
     # Calcolo del numero totale di pagine
-    #total_pages = (total + per_page - 1) // per_page
+    total_pages = (total + per_page - 1) // per_page
 
     books = crud.get_book_by_search(db, query,search_field)
     return templates.TemplateResponse("filtered.html", {
         "request": request, 
         "books": books,
-       "current_user": current_user
+        "current_user": current_user
         })
 
 

@@ -36,8 +36,11 @@ def get_book_by_search(db: Session, query: str,search_field: str,skip: int = 0,l
     elif search_field == "author":
         return db.query(Book).filter(Book.author.ilike(f"%{query}%")).order_by(Book.author.desc()).offset(skip).limit(limit).all()
 
-def get_books_count_filtered(db: Session, query: str):
-    return db.query(Book).filter(or_(Book.title.ilike(f"%{query}%"),Book.author.ilike(f"%{query}%"))).count()
+def get_books_count_filtered(db: Session, query: str, search_field: str):
+    if search_field == "title":
+        return db.query(Book).filter(Book.title.ilike(f"%{query}%")).count()
+    elif search_field == "author":
+        return db.query(Book).filter(Book.author.ilike(f"%{query}%")).count()
 
 def get_books(db: Session, skip: int = 0, limit: int = 1000):
     return db.query(Book).order_by(Book.author.desc()).offset((skip-1)*limit).limit(limit).all()
