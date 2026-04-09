@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import Optional
 from fastapi.responses import RedirectResponse, HTMLResponse
 from starlette.middleware.sessions import SessionMiddleware
-from routers import users, loans
+from routers import users, loans, helps
 
 
 # Create the database tables
@@ -24,6 +24,7 @@ app = FastAPI(title="MPMC Library Management System")
 
 app.include_router(users.router)
 app.include_router(loans.router)
+app.include_router(helps.router)
 
 # Setup templates and static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -218,28 +219,19 @@ def delete_book_web(request: Request, book_id: str, db: Session = Depends(get_db
 # Add these to your main.py file, after the existing routes
 
 @app.get("/about")
-def about_page(request: Request):
+def about_page(request: Request, current_user: Optional[models.User] = Depends(crud.get_current_user)):
     return templates.TemplateResponse("about.html", {
-        "request": request
+        "request": request,
+        "current_user": current_user
     })
 
 @app.get("/contact")
-def contact_page(request: Request):
+def contact_page(request: Request, current_user: Optional[models.User] = Depends(crud.get_current_user)):
     return templates.TemplateResponse("contact.html", {
-        "request": request
+        "request": request,
+        "current_user": current_user
     })
 
-@app.get("/help/user-guide")
-def user_guide_page(request: Request):
-    return templates.TemplateResponse("user_guide.html", {
-        "request": request
-    })
-
-@app.get("/help/faq")
-def faq_page(request: Request):
-    return templates.TemplateResponse("faq.html", {
-        "request": request
-    })
 
 @app.get("/search")
 def search_books(request: Request, query: str = "", search_field: str = "",  db: Session = Depends(get_db),page: int = 1,per_page: int = PerPage, current_user: Optional[models.User] = Depends(crud.get_current_user)):
