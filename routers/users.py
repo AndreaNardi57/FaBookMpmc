@@ -133,7 +133,7 @@ def user_edit(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(crud.get_current_user)
 ):
-    crud.require_role(current_user, ["admin"])
+    crud.require_role(current_user, ["admin", "user"])
     
     user = crud.get_user_by_id(db, user_id)
     if not user:
