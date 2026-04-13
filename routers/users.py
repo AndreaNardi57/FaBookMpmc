@@ -98,6 +98,45 @@ def user_modify(
         }
     )
 
+@router.post("/modify")
+def user_mod(
+    request: Request,
+    email: str = Form(...),
+    first_name: str = Form(...),
+    last_name: str = Form(...),
+    phone: Optional[str] = Form(None),
+    role: Optional[str] = Form(None),
+    is_active: Optional[str] = Form(None),
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(crud.get_current_user)
+):
+    crud.require_role(current_user, ["user"])
+
+    user = crud.get_user_by_id(db, current_user.id)
+    if not user:
+        raise HTTPException(404)
+
+    user.email = email
+    user.first_name = first_name
+    user.last_name = last_name
+    user.phone = phone if phone else None
+    
+    db.commit()
+
+    crud.log_action(
+        db,
+        actor_id=current_user.id,
+        action="MODIFICA_UTENTE",
+        target=f"user_id={user.id}"
+    )
+    if current_user.role == "user":
+        url = "/"
+    else:
+        url = "/users"
+
+    return RedirectResponse(url, status_code=303)
+
+
 @router.get("/edit/{user_id}")
 def user_edit_page(
     request: Request,
@@ -128,12 +167,12 @@ def user_edit(
     first_name: str = Form(...),
     last_name: str = Form(...),
     phone: Optional[str] = Form(None),
-    role: str = Form(...),
+    role: Optional[str] = Form(None),
     is_active: Optional[str] = Form(None),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(crud.get_current_user)
 ):
-    crud.require_role(current_user, ["admin", "user"])
+    crud.require_role(current_user, ["admin"])
     
     user = crud.get_user_by_id(db, user_id)
     if not user:

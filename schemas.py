@@ -30,7 +30,7 @@ class UserBase(BaseModel):
     last_name: str
     phone: str | None = None
     hashed_password: str
-    role: str
+    role: str | None = None
     is_active: bool
     created_at: date
 
