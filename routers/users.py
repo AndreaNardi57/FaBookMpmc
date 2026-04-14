@@ -179,18 +179,7 @@ def user_edit(
         raise HTTPException(404)
 
     # BLOCCO CRITICO
-    if user.id == current_user.id:
-        if role != current_user.role:
-            raise HTTPException(
-                status_code=400,
-                detail="Non puoi cambiare il tuo ruolo"
-            )
-        if not is_active:
-            raise HTTPException(
-                status_code=400,
-                detail="Non puoi disattivare il tuo account"
-            )
-    else:
+    if user.id != current_user.id:
         user.role = role
         user.is_active = True if is_active else False
 
