@@ -1,33 +1,25 @@
+import os
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.engine import URL
+from sqlalchemy.orm import declarative_base, sessionmaker
 
-from typing import Annotated
-## from config import get_settings
+# Database URL
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
-PG_DATABASE_URL = URL.create(
-    drivername="postgresql+psycopg2",
-    username="pescatorello",
-    password="acubens@1",
-    host="localhost",
-    database="mpmcbiblio"
-    )
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL non è impostata")
 
-
-# Create SQLAlchemy engine
-## engine = create_engine(PG_DATABASE_URL)
-
-engine = create_engine("postgresql+psycopg2://innktnbgftlllfaggzow:urpxujxabqmbtmpkprbkvrtaqvkjss@9qasp5v56q8ckkf5dc.leapcellpool.com:6438/zekjptozpulnobhzqrlu?sslmode=require")
+# SQLAlchemy engine
+engine = create_engine(DATABASE_URL)
 
 # Create SessionLocal class
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
 
 # Create Base class for models
 Base = declarative_base()
-
-## Base.metadata.schema = 'pescatorello'
-Base.metadata.schema = 'mpmcbiblio'
 
 # Dependency to get database session
 def get_db():

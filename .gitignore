@@ -1,2 +1,36 @@
-venv/*
-__pycache_
+# Virtual environments
+venv/
+bin/
+lib/
+lib64
+include/
+asnu/
+pyvenv.cfg
+PassoPasso.txt
+bookMpmc.sql
+books.odt
+
+# Python cache
+__pycache__/
+auth/__pycache__/
+routers/__pycache__/
+*.py[cod]
+
+# Environment / secrets
+.env
+.env.*
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+database.py.local-working
+
+# Local logs
+access_log
+error_log

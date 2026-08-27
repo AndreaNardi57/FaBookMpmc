@@ -11,6 +11,8 @@ Date_Value = 'CURRENT_DATE'
 
 class Book(Base):
     __tablename__ = "books"
+    __table_args__ = {"schema": "pescatorello"}
+
     id = Column(Integer, primary_key=True, index = True)
     title = Column(Text, nullable = False)
     author = Column(Text, nullable = False)
@@ -25,6 +27,7 @@ class Book(Base):
 
 class User(Base):
     __tablename__ = "users"
+    __table_args__ = {"schema": "pescatorello"}
 	    
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, nullable = False)
@@ -41,9 +44,10 @@ class User(Base):
 
 class Copies(Base):
     __tablename__ = "copies"
+    __table_args__ = {"schema": "pescatorello"}
 
     id = Column(Integer, primary_key=True, index=True)
-    book_id = Column(Integer, ForeignKey('books.id'), nullable = False)
+    book_id = Column(Integer, ForeignKey('pescatorello.books.id'), nullable = False)
     lay = Column(String)
     status = Column(Text)
     conditions = Column(String)
@@ -54,10 +58,11 @@ class Copies(Base):
 
 class Loan(Base):
     __tablename__ = "on_loan"
+    __table_args__ = {"schema": "pescatorello"}
 
     id = Column(Integer, primary_key=True, index=True)
-    copies_id = Column(Integer, ForeignKey('copies.id'), nullable = False)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable = False)
+    copies_id = Column(Integer, ForeignKey('pescatorello.copies.id'), nullable = False)
+    user_id = Column(Integer, ForeignKey('pescatorello.users.id'), nullable = False)
     borrowed = Column(Date, server_default=text(Date_Value))
     due_back = Column(Date, nullable = False)
     return_date = Column(Date)
@@ -69,6 +74,7 @@ class Loan(Base):
 
 class AuditLog(Base):
     __tablename__ = "audit_logs"
+    __table_args__ = {"schema": "pescatorello"}
 
     id = Column(Integer, primary_key=True)
     actor_id = Column(Integer, ForeignKey("users.id"), nullable=False)
