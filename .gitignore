@@ -34,3 +34,4 @@ database.py.local-working
 # Local logs
 access_log
 error_log
+*.dump

@@ -22,7 +22,7 @@ class Book(Base):
     release = Column(Text)
     language = Column(String)
     description = Column(Text)
-    created_at = Column(Date, server_default=text(Date_Value))
+    created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
     copies = relationship("Copies", back_populates="book")
 
 class User(Base):
@@ -38,7 +38,7 @@ class User(Base):
     hashed_password = Column(String)
     role = Column(String, nullable=False, default="user")   # admin | librarian | user
     is_active = Column(Boolean, default = True)
-    created_at = Column(Date, server_default=text(Date_Value))
+    created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
 	    
     ## loans = relationship("Loan", back_populates="users")
 
@@ -77,7 +77,7 @@ class AuditLog(Base):
     __table_args__ = {"schema": "pescatorello"}
 
     id = Column(Integer, primary_key=True)
-    actor_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    actor_id = Column(Integer, ForeignKey("pescatorello.users.id"), nullable=False)
     action = Column(String, nullable=False)
     target = Column(String, nullable=True)
     timestamp = Column(DateTime, default=datetime.utcnow)
